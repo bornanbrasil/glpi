@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glpi
+  namespace: client-bornan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glpi
+  template:
+    metadata:
+      labels:
+        app: glpi
+    spec:
+      containers:
+        - name: glpi
+          image: bornanacr.azurecr.io/glpi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+                name: glpi-secrets
+            - configMapRef:
+                name: glpi-config
+          volumeMounts:
+            - name: files
+              mountPath: /var/www/html/files
+            - name: config
+              mountPath: /var/www/html/config
+            - name: marketplace
+              mountPath: /var/www/html/marketplace
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: glpi-files-pvc
+        - name: config
+          persistentVolumeClaim:
+            claimName: glpi-config-pvc
+        - name: marketplace
+          persistentVolumeClaim:
+            claimName: glpi-marketplace-pvc

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: glpi
-          image: bornanacr.azurecr.io/glpi:latest
+          image: bornanacr.azurecr.io/bornan-glpi:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
